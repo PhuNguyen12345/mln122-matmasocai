@@ -278,7 +278,9 @@
 }
 
 .intro-kicker {
-  margin: 0 0 4px;
+  position: relative;
+  z-index: 1;
+  margin: 0 0 20px;
   color: var(--gold);
   font-family: ui-monospace, monospace;
   font-size: 0.72rem;
@@ -915,6 +917,7 @@
   .intro-status span:nth-child(2) { display: none; }
   .intro-content { padding-block: 32px; }
   .intro-content .logo-mark { width: 80px; height: 80px; margin-block: 16px; }
+  .intro-kicker { margin-bottom: 22px; }
   .intro-content h1 { font-size: clamp(3.3rem, 18vw, 5.3rem); }
   .intro-lead { margin-block: 22px; }
   .primary-cta { min-width: min(286px, 100%); }
