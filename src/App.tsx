@@ -1,6 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
 import './App.css'
 import { coinLadder, questions } from './data/questions'
+import { gameReducer } from './game/gameEngine'
+import { loadGame, saveGame } from './game/persistence'
+import { assertValidQuestions } from './game/validateQuestions'
 import type {
   AnswerId,
   GameState,
@@ -8,7 +11,7 @@ import type {
   Question,
 } from './types/game'
 
-const STORAGE_KEY = 'mat-ma-so-cai:vertical-slice:v1'
+assertValidQuestions(questions)
 
 const lifelineMeta: Array<{
   id: LifelineId
@@ -41,43 +44,6 @@ const lifelineMeta: Array<{
     description: 'Tra cứu khái niệm liên quan',
   },
 ]
-
-function createInitialState(): GameState {
-  return {
-    screen: 'intro',
-    currentIndex: 0,
-    lives: 3,
-    usedLifelines: {
-      fifty: false,
-      npc: false,
-      poll: false,
-      theory: false,
-    },
-    eliminatedAnswers: [],
-    attemptedAnswers: [],
-    selectedAnswer: null,
-    answerStatus: null,
-    unlockedEvidence: [],
-  }
-}
-
-function loadGame(): GameState {
-  try {
-    const saved = window.localStorage.getItem(STORAGE_KEY)
-    if (!saved) return createInitialState()
-    const parsed = JSON.parse(saved) as GameState
-    if (
-      parsed.currentIndex < 0 ||
-      parsed.currentIndex >= questions.length ||
-      !parsed.usedLifelines
-    ) {
-      return createInitialState()
-    }
-    return parsed
-  } catch {
-    return createInitialState()
-  }
-}
 
 function formatCoin(value: number) {
   return new Intl.NumberFormat('vi-VN').format(value)
@@ -123,7 +89,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           <span>Nhận hồ sơ điều tra</span>
           <span aria-hidden="true">→</span>
         </button>
-        <p className="intro-note">Vertical slice · Hồ sơ thị trường · Câu 1–5</p>
+        <p className="intro-note">Vertical slice · Hai chặng điều tra · Câu 1–10</p>
       </section>
 
       <div className="intro-status" aria-hidden="true">
@@ -208,6 +174,11 @@ function EvidenceVisual({ question }: { question: Question }) {
           {question.id === 3 && <><span className="contract-line" /><span className="contract-line contract-line--two" /><span className="contract-seal">35</span></>}
           {question.id === 4 && <><span className="bread-shape" /><span className="scan-line" /></>}
           {question.id === 5 && <><span className="warehouse" /><span className="alert-wave" /></>}
+          {question.id === 6 && <><span className="contract-line" /><span className="contract-line contract-line--two" /><span className="contract-seal">8H</span></>}
+          {question.id === 7 && <><span className="map-node map-node--one" /><span className="map-node map-node--two" /><span className="map-node map-node--three" /><span className="map-line" /></>}
+          {question.id === 8 && <><span className="value-pulse">240</span><span className="scan-line" /></>}
+          {question.id === 9 && <><span className="shift-bar shift-bar--necessary">4H</span><span className="shift-bar shift-bar--surplus">4H</span></>}
+          {question.id === 10 && <><span className="shift-bar shift-bar--necessary">4H</span><span className="shift-bar shift-bar--surplus shift-bar--extended">6H</span></>}
         </div>
         <div className="evidence-paper__footer">
           <span>{evidence.category}</span>
@@ -234,7 +205,7 @@ function ProgressLadder({ currentQuestion }: { currentQuestion: number }) {
           const questionNumber = 15 - index
           const isCurrent = questionNumber === currentQuestion
           const isComplete = questionNumber < currentQuestion
-          const isAvailable = questionNumber <= 5
+          const isAvailable = questionNumber <= 10
           const isSafe = [5, 10, 15].includes(questionNumber)
           return (
             <li
@@ -441,13 +412,13 @@ function GameScreen({
           <LogoMark />
           <div>
             <strong>Mật mã Sổ Cái</strong>
-            <span>Hồ sơ thị trường / Chặng 01</span>
+            <span>{question.stageTitle} / Chặng {String(question.stage).padStart(2, '0')}</span>
           </div>
         </div>
         <div className="game-header__status">
           <button type="button" className="archive-button" onClick={onOpenEvidence}>
             <span>Kho chứng cứ</span>
-            <strong>{state.unlockedEvidence.length}/5</strong>
+            <strong>{state.unlockedEvidence.length}/10</strong>
           </button>
           <div className="lives" aria-label={`${state.lives} mạng điều tra còn lại`}>
             <span>Mạng điều tra</span>
@@ -475,7 +446,7 @@ function GameScreen({
           </div>
           <div className="case-coordinates">
             <span>Sector N-{question.id + 3}</span>
-            <span>Signal 0{8 - question.id}.4</span>
+            <span>Signal {String(14 - question.id).padStart(2, '0')}.4</span>
           </div>
         </aside>
 
@@ -543,7 +514,11 @@ function GameScreen({
                 )}
                 {state.answerStatus === 'correct' && (
                   <button type="button" onClick={onNext}>
-                    {question.id === 5 ? 'Mở hồ sơ thị trường' : 'Thu chứng cứ & tiếp tục'}
+                    {question.id === 5
+                      ? 'Mở tầng dữ liệu thứ hai'
+                      : question.id === 10
+                        ? 'Giải mã Sổ sản xuất'
+                        : 'Thu chứng cứ & tiếp tục'}
                   </button>
                 )}
               </div>
@@ -564,12 +539,12 @@ function GameScreen({
   )
 }
 
-function CheckpointScreen({
+function StageTransitionScreen({
   unlockedQuestions,
-  onReplay,
+  onContinue,
 }: {
   unlockedQuestions: Question[]
-  onReplay: () => void
+  onContinue: () => void
 }) {
   return (
     <main className="checkpoint-screen">
@@ -594,12 +569,56 @@ function CheckpointScreen({
           ))}
         </div>
         <div className="next-stage-teaser">
-          <span>Tiếp theo</span>
+          <span>Thông điệp từ Lyra</span>
+          <blockquote>“Có hàng trở lại rồi. Nhưng tại sao nhà máy vẫn bắt công nhân làm việc đến kiệt sức?”</blockquote>
           <strong>Chặng 02 — Ai tạo ra giá trị?</strong>
-          <small>Câu 6–10 · Đang chờ phát triển</small>
+          <small>Câu 6–10 · Tầng dữ liệu thứ hai đã mở</small>
+        </div>
+        <button className="primary-cta" type="button" onClick={onContinue}>
+          <span>Tiến vào khu sản xuất</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+    </main>
+  )
+}
+
+function CheckpointScreen({
+  unlockedQuestions,
+  onReplay,
+}: {
+  unlockedQuestions: Question[]
+  onReplay: () => void
+}) {
+  return (
+    <main className="checkpoint-screen">
+      <div className="checkpoint-grid" aria-hidden="true" />
+      <section className="checkpoint-content">
+        <span className="checkpoint-kicker">Mốc an toàn 02 / Sổ sản xuất đã mở</span>
+        <div className="checkpoint-icon" aria-hidden="true">✓</div>
+        <h1>Giá trị thặng dư<br />đã lộ diện.</h1>
+        <p>
+          Lyra và những công nhân Novus tạo ra lượng giá trị lớn hơn giá trị sức
+          lao động của họ. Ca làm bị kéo dài khiến thời gian lao động thặng dư tăng,
+          trong khi tiền công không đổi.
+        </p>
+        <div className="checkpoint-stats">
+          <div><strong>10</strong><span>Câu đã giải</span></div>
+          <div><strong>{String(unlockedQuestions.length).padStart(2, '0')}</strong><span>Chứng cứ</span></div>
+          <div><strong>32K</strong><span>Coin an toàn</span></div>
+        </div>
+        <div className="evidence-tape">
+          {unlockedQuestions.map((question) => (
+            <span key={question.id}>E{String(question.id).padStart(2, '0')}</span>
+          ))}
+        </div>
+        <div className="next-stage-teaser">
+          <span>Cảnh báo từ M.O.N.E.Y.</span>
+          <strong>Chặng 03 — Cuộc đua năng suất</strong>
+          <small>Hệ thống phát hiện một cách thức khác để gia tăng giá trị thặng dư.</small>
         </div>
         <button className="primary-cta" type="button" onClick={onReplay}>
-          <span>Chơi lại vertical slice</span>
+          <span>Chơi lại hồ sơ 1–10</span>
           <span aria-hidden="true">↻</span>
         </button>
       </section>
@@ -608,7 +627,7 @@ function CheckpointScreen({
 }
 
 function App() {
-  const [state, setState] = useState<GameState>(loadGame)
+  const [state, dispatch] = useReducer(gameReducer, questions.length, loadGame)
   const [modal, setModal] = useState<ModalKind>(null)
 
   const currentQuestion = questions[state.currentIndex]
@@ -618,7 +637,7 @@ function App() {
   )
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    saveGame(state)
   }, [state])
 
   useEffect(() => {
@@ -626,88 +645,52 @@ function App() {
   }, [state.screen, state.currentIndex])
 
   const answerQuestion = (answer: AnswerId) => {
-    if (state.answerStatus || state.lives === 0) return
-    const isCorrect = answer === currentQuestion.correctAnswer
-    setState((current) => ({
-      ...current,
-      selectedAnswer: answer,
-      answerStatus: isCorrect ? 'correct' : 'wrong',
-      attemptedAnswers: isCorrect
-        ? current.attemptedAnswers
-        : [...current.attemptedAnswers, answer],
-      lives: isCorrect ? current.lives : Math.max(0, current.lives - 1),
-      unlockedEvidence: isCorrect
-        ? Array.from(new Set([...current.unlockedEvidence, currentQuestion.id]))
-        : current.unlockedEvidence,
-    }))
+    dispatch({ type: 'ANSWER', answer, question: currentQuestion })
   }
 
   const retryQuestion = () => {
-    setState((current) => ({
-      ...current,
-      selectedAnswer: null,
-      answerStatus: null,
-    }))
+    dispatch({ type: 'RETRY' })
   }
 
   const nextQuestion = () => {
-    if (currentQuestion.id === questions.length) {
-      setState((current) => ({ ...current, screen: 'checkpoint' }))
-      return
-    }
-    setState((current) => ({
-      ...current,
-      currentIndex: current.currentIndex + 1,
-      selectedAnswer: null,
-      answerStatus: null,
-      attemptedAnswers: [],
-      eliminatedAnswers: [],
-    }))
+    dispatch({ type: 'ADVANCE', question: currentQuestion })
   }
 
   const useLifeline = (id: LifelineId) => {
     if (state.usedLifelines[id] || state.answerStatus) return
-    setState((current) => ({
-      ...current,
-      usedLifelines: { ...current.usedLifelines, [id]: true },
-      eliminatedAnswers:
-        id === 'fifty'
-          ? [...currentQuestion.lifelines.eliminate]
-          : current.eliminatedAnswers,
-    }))
+    dispatch({ type: 'USE_LIFELINE', id, question: currentQuestion })
     setModal(id)
   }
 
   const restartStage = () => {
-    setState((current) => ({
-      ...current,
-      screen: 'game',
-      currentIndex: 0,
-      lives: 3,
-      selectedAnswer: null,
-      answerStatus: null,
-      attemptedAnswers: [],
-      eliminatedAnswers: [],
-      unlockedEvidence: [],
-    }))
+    dispatch({ type: 'RESTART_STAGE' })
   }
 
   const resetGame = () => {
     if (!window.confirm('Đặt lại toàn bộ tiến độ vertical slice?')) return
     setModal(null)
-    setState(createInitialState())
+    dispatch({ type: 'RESET' })
   }
 
   if (state.screen === 'intro') {
-    return <IntroScreen onStart={() => setState((current) => ({ ...current, screen: 'briefing' }))} />
+    return <IntroScreen onStart={() => dispatch({ type: 'OPEN_BRIEFING' })} />
   }
 
   if (state.screen === 'briefing') {
-    return <BriefingScreen onContinue={() => setState((current) => ({ ...current, screen: 'game' }))} />
+    return <BriefingScreen onContinue={() => dispatch({ type: 'START_GAME' })} />
+  }
+
+  if (state.screen === 'transition') {
+    return (
+      <StageTransitionScreen
+        unlockedQuestions={unlockedQuestions}
+        onContinue={() => dispatch({ type: 'CONTINUE_STAGE_TWO' })}
+      />
+    )
   }
 
   if (state.screen === 'checkpoint') {
-    return <CheckpointScreen unlockedQuestions={unlockedQuestions} onReplay={() => setState(createInitialState())} />
+    return <CheckpointScreen unlockedQuestions={unlockedQuestions} onReplay={() => dispatch({ type: 'RESET' })} />
   }
 
   return (

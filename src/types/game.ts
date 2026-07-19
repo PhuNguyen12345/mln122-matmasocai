@@ -44,13 +44,14 @@ export interface Question {
   }
 }
 
-export type GameScreen = 'intro' | 'briefing' | 'game' | 'checkpoint'
+export type GameScreen = 'intro' | 'briefing' | 'game' | 'transition' | 'checkpoint'
 
 export type LifelineId = 'fifty' | 'npc' | 'poll' | 'theory'
 
 export interface GameState {
   screen: GameScreen
   currentIndex: number
+  checkpoint: 0 | 5 | 10
   lives: number
   usedLifelines: Record<LifelineId, boolean>
   eliminatedAnswers: AnswerId[]

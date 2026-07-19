@@ -338,6 +338,338 @@ export const questions = [
         'Giá cả thị trường không do một yếu tố duy nhất quyết định. Cung–cầu, cạnh tranh, thông tin và hành vi của các chủ thể có thể khiến giá cả dao động. Việc kiểm soát đường lưu thông cũng có thể làm lượng cung thực tế trên thị trường giảm.',
     },
   },
+  {
+    id: 6,
+    stage: 2,
+    stageTitle: 'Ai tạo ra giá trị?',
+    coin: 2000,
+    difficulty: 'Dễ',
+    title: 'Người lao động bán gì?',
+    scene:
+      'Lyra ký hợp đồng làm việc 8 giờ mỗi ngày. Cô không bán bản thân và cũng không sở hữu sản phẩm cuối cùng của nhà máy.',
+    prompt: 'Trong hợp đồng lao động, Lyra bán cho chủ doanh nghiệp điều gì?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Bản thân người lao động',
+        feedback:
+          'Người lao động tự do không bán bản thân mình như một vật sở hữu. Lyra chỉ chuyển quyền sử dụng năng lực lao động của mình trong thời gian và điều kiện được xác lập trong hợp đồng.',
+      },
+      {
+        id: 'B',
+        text: 'Quyền sử dụng sức lao động trong một thời gian nhất định',
+        feedback:
+          'Chính xác. Lyra bán sức lao động, tức khả năng thể chất và tinh thần được sử dụng trong quá trình sản xuất, trong một khoảng thời gian nhất định để nhận tiền công.',
+      },
+      {
+        id: 'C',
+        text: 'Toàn bộ sản phẩm của nhà máy',
+        feedback:
+          'Sản phẩm được tạo ra trong nhà máy thuộc quyền định đoạt của chủ sở hữu tư liệu sản xuất theo quan hệ đã thiết lập. Lyra không bán sản phẩm mà cô chưa sở hữu.',
+      },
+      {
+        id: 'D',
+        text: 'Máy móc mà cô sử dụng',
+        feedback:
+          'Máy móc thuộc nhà máy và chỉ là tư liệu lao động mà Lyra sử dụng. Cô không sở hữu máy, nên không thể bán nó cho doanh nghiệp.',
+      },
+    ],
+    correctAnswer: 'B',
+    conclusion:
+      'Trong quan hệ lao động làm thuê, người lao động bán hàng hóa sức lao động chứ không bán bản thân. Người sử dụng lao động mua quyền sử dụng năng lực lao động trong một thời gian nhất định; tiền công là hình thức biểu hiện bằng tiền của giá trị hàng hóa sức lao động.',
+    evidence: {
+      id: 'E06',
+      index: 6,
+      code: 'LABOR-C08',
+      title: 'Hợp đồng của Lyra',
+      category: 'Hồ sơ lao động',
+      lines: [
+        'Thời gian cung cấp sức lao động: 8 giờ/ngày',
+        'Mức tiền công: 100 Coin/ngày',
+        'Tư liệu sản xuất: thuộc Novus Steel',
+      ],
+      highlight: 'Quyền sử dụng sức lao động được giới hạn trong ca làm việc.',
+    },
+    lifelines: {
+      eliminate: ['C', 'D'],
+      poll: { A: 18, B: 65, C: 11, D: 6 },
+      npc: {
+        id: 'lyra',
+        name: 'Lyra',
+        role: 'Công nhân Novus Steel',
+        hint:
+          'Tôi vẫn là một con người tự do sau khi ký hợp đồng. Điều nhà máy được quyền sử dụng chỉ tồn tại trong ca làm việc.',
+      },
+      theory:
+        'Sức lao động là toàn bộ năng lực thể chất và tinh thần tồn tại trong con người, được vận dụng trong sản xuất. Người lao động tự do bán quyền sử dụng sức lao động trong một thời hạn, chứ không bán bản thân mình.',
+    },
+  },
+  {
+    id: 7,
+    stage: 2,
+    stageTitle: 'Ai tạo ra giá trị?',
+    coin: 4000,
+    difficulty: 'Trung bình',
+    title: 'Điều kiện để sức lao động trở thành hàng hóa',
+    scene:
+      'Hồ sơ tuyển dụng cho thấy phần lớn công nhân Novus tự do ký hợp đồng, nhưng không sở hữu tư liệu để tự tổ chức sản xuất.',
+    prompt: 'Điều kiện nào cần thiết để sức lao động trở thành hàng hóa?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Người lao động tự do về thân thể và không có đủ tư liệu sản xuất cần thiết',
+        feedback:
+          'Chính xác. Người lao động phải có quyền định đoạt sức lao động của mình, đồng thời không có đủ tư liệu sản xuất và sinh hoạt để tự tổ chức sản xuất, nên phải bán sức lao động.',
+      },
+      {
+        id: 'B',
+        text: 'Người lao động phải sở hữu toàn bộ nhà máy',
+        feedback:
+          'Nếu người lao động sở hữu đầy đủ nhà máy và tư liệu sản xuất, họ có thể tự tổ chức sản xuất thay vì phải bán sức lao động cho một chủ thể khác.',
+      },
+      {
+        id: 'C',
+        text: 'Mọi người lao động nhận mức tiền công giống nhau',
+        feedback:
+          'Mức tiền công có thể khác nhau tùy trình độ, ngành nghề và điều kiện. Việc mọi người nhận lương bằng nhau không phải điều kiện làm sức lao động trở thành hàng hóa.',
+      },
+      {
+        id: 'D',
+        text: 'Sản phẩm phải bán cao hơn giá trị',
+        feedback:
+          'Việc giá bán sản phẩm cao hay thấp không quyết định tư cách hàng hóa của sức lao động. Câu hỏi liên quan đến địa vị kinh tế và quyền tự do của người lao động.',
+      },
+    ],
+    correctAnswer: 'A',
+    conclusion:
+      'Sức lao động trở thành hàng hóa khi người lao động vừa tự do về thân thể, có khả năng định đoạt sức lao động, vừa không có đủ tư liệu sản xuất để tự kết hợp với sức lao động của mình. Vì thế, họ phải bán sức lao động để có thu nhập và duy trì cuộc sống.',
+    evidence: {
+      id: 'E07',
+      index: 7,
+      code: 'WORKFORCE-86',
+      title: 'Hồ sơ tuyển dụng Novus Steel',
+      category: 'Dữ liệu nhân lực',
+      lines: [
+        '86% công nhân không sở hữu tư liệu sản xuất',
+        '92% thu nhập hộ gia đình đến từ tiền công',
+        'Người lao động tự ký hoặc chấm dứt hợp đồng theo quy định',
+      ],
+      highlight: 'Tự do về thân thể nhưng không đủ tư liệu sản xuất.',
+    },
+    lifelines: {
+      eliminate: ['C', 'D'],
+      poll: { A: 60, B: 20, C: 13, D: 7 },
+      npc: {
+        id: 'lyra',
+        name: 'Lyra',
+        role: 'Công nhân Novus Steel',
+        hint:
+          'Tôi có quyền chọn nơi làm việc, nhưng nếu không bán sức lao động thì gia đình tôi không có nguồn thu nhập ổn định.',
+      },
+      theory:
+        'Hai điều kiện cơ bản là người lao động tự do định đoạt sức lao động và không sở hữu đủ tư liệu sản xuất cần thiết. Thiếu một trong hai điều kiện, sức lao động không tồn tại như một hàng hóa theo đúng nghĩa.',
+    },
+  },
+  {
+    id: 8,
+    stage: 2,
+    stageTitle: 'Ai tạo ra giá trị?',
+    coin: 8000,
+    difficulty: 'Trung bình',
+    title: 'Giá trị sử dụng đặc biệt của sức lao động',
+    scene:
+      'Nhà máy mua nguyên liệu, máy móc và sức lao động. Sau sản xuất, tổng giá trị sản phẩm lớn hơn toàn bộ giá trị ứng trước.',
+    prompt: 'Giá trị sử dụng đặc biệt của hàng hóa sức lao động là gì?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Có thể cất giữ vô thời hạn',
+        feedback:
+          'Sức lao động gắn với con người và cần được duy trì, tái tạo hằng ngày. Thời gian lao động không sử dụng hôm nay không thể đơn giản cất kho để dùng nguyên vẹn vào một thời điểm bất kỳ.',
+      },
+      {
+        id: 'B',
+        text: 'Có khả năng tạo ra giá trị mới lớn hơn giá trị của bản thân nó',
+        feedback:
+          'Chính xác. Khi được sử dụng trong sản xuất, sức lao động có thể tạo ra lượng giá trị mới lớn hơn giá trị cần thiết để duy trì và tái sản xuất chính sức lao động đó.',
+      },
+      {
+        id: 'C',
+        text: 'Không cần tư liệu sản xuất vẫn tạo ra sản phẩm',
+        feedback:
+          'Sức lao động chỉ tạo ra sản phẩm khi kết hợp với tư liệu sản xuất như nguyên liệu, công cụ và máy móc. Không thể tách lao động khỏi các điều kiện vật chất của sản xuất.',
+      },
+      {
+        id: 'D',
+        text: 'Luôn được bán đúng bằng giá trị',
+        feedback:
+          'Việc hàng hóa được bán đúng, cao hay thấp hơn giá trị không phải giá trị sử dụng đặc biệt của sức lao động. Điểm đặc biệt nằm trong quá trình tiêu dùng nó để sản xuất.',
+      },
+    ],
+    correctAnswer: 'B',
+    conclusion:
+      'Giá trị sử dụng đặc biệt của sức lao động là khả năng tạo ra giá trị mới, trong đó lượng giá trị mới có thể lớn hơn giá trị của bản thân sức lao động. Phần dôi ra ngoài giá trị sức lao động là cơ sở hình thành giá trị thặng dư.',
+    evidence: {
+      id: 'E08',
+      index: 8,
+      code: 'VALUE-SCAN-240',
+      title: 'Bản quét quá trình sản xuất',
+      category: 'Phân tích giá trị',
+      lines: [
+        'Nguyên liệu chuyển giá trị vào sản phẩm',
+        'Máy móc chuyển phần giá trị hao mòn',
+        'Lao động sống tạo ra giá trị mới',
+      ],
+      highlight: 'Giá trị mới: 240 Coin · Giá trị sức lao động: 100 Coin.',
+    },
+    lifelines: {
+      eliminate: ['A', 'D'],
+      poll: { A: 7, B: 61, C: 23, D: 9 },
+      npc: {
+        id: 'lyra',
+        name: 'Lyra',
+        role: 'Công nhân Novus Steel',
+        hint:
+          'Hãy xem điều gì xuất hiện thêm sau khi sức lao động được sử dụng cùng nguyên liệu và máy móc.',
+      },
+      theory:
+        'Giá trị sử dụng của sức lao động chỉ được thực hiện trong lao động. Khi được tiêu dùng, nó không chỉ tái tạo giá trị của bản thân mà còn có khả năng tạo ra một lượng giá trị mới lớn hơn.',
+    },
+  },
+  {
+    id: 9,
+    stage: 2,
+    stageTitle: 'Ai tạo ra giá trị?',
+    coin: 16000,
+    difficulty: 'Trung bình',
+    title: 'Thời gian lao động thặng dư',
+    scene:
+      'Trong ca 8 giờ, Lyra đã tạo đủ lượng giá trị tương đương tiền công sau 4 giờ. Máy vẫn tiếp tục chạy trong 4 giờ còn lại.',
+    prompt:
+      'Trong ngày lao động 8 giờ, sau 4 giờ người lao động đã tạo ra giá trị tương đương giá trị sức lao động. Bốn giờ còn lại gọi là gì?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Thời gian lao động cá biệt',
+        feedback:
+          'Thời gian lao động cá biệt nói đến hao phí lao động riêng của một người sản xuất so với điều kiện xã hội. Câu hỏi đang chia ngày lao động thành phần tái tạo giá trị sức lao động và phần dôi ra.',
+      },
+      {
+        id: 'B',
+        text: 'Thời gian lao động tất yếu',
+        feedback:
+          'Thời gian lao động tất yếu là bốn giờ đầu, khi người lao động tạo ra lượng giá trị tương đương giá trị sức lao động. Câu hỏi hỏi về phần thời gian sau mốc đó.',
+      },
+      {
+        id: 'C',
+        text: 'Thời gian lao động thặng dư',
+        feedback:
+          'Chính xác. Trong bốn giờ sau, người lao động vẫn tiếp tục tạo ra giá trị nhưng phần giá trị này vượt quá giá trị sức lao động và trở thành giá trị thặng dư.',
+      },
+      {
+        id: 'D',
+        text: 'Thời gian ngừng sản xuất',
+        feedback:
+          'Nhà máy vẫn hoạt động và người lao động tiếp tục tạo sản phẩm trong bốn giờ sau. Đây không phải thời gian ngừng sản xuất hay nghỉ ngơi.',
+      },
+    ],
+    correctAnswer: 'C',
+    conclusion:
+      'Ngày lao động được chia thành thời gian lao động tất yếu và thời gian lao động thặng dư. Trong thời gian tất yếu, người lao động tạo ra giá trị tương đương giá trị sức lao động; trong thời gian thặng dư, họ tạo ra phần giá trị mới dôi ra cho chủ sở hữu tư liệu sản xuất.',
+    evidence: {
+      id: 'E09',
+      index: 9,
+      code: 'SHIFT-04/04',
+      title: 'Đồng hồ ca làm',
+      category: 'Nhật ký sản xuất',
+      lines: [
+        'Giờ 1–4: tái tạo giá trị sức lao động',
+        'Giờ 5–8: tạo giá trị thặng dư',
+        'Tổng thời gian lao động: 8 giờ',
+      ],
+      highlight: 'Bốn giờ thặng dư bắt đầu sau khi giá trị sức lao động đã được tái tạo.',
+    },
+    lifelines: {
+      eliminate: ['A', 'D'],
+      poll: { A: 10, B: 29, C: 56, D: 5 },
+      npc: {
+        id: 'lyra',
+        name: 'Lyra',
+        role: 'Công nhân Novus Steel',
+        hint:
+          'Bốn giờ đầu đã tạo đủ lượng giá trị tương đương tiền công. Nhưng máy vẫn chạy thêm bốn giờ nữa.',
+      },
+      theory:
+        'Thời gian lao động tất yếu là phần ngày lao động tái tạo giá trị sức lao động. Thời gian lao động thặng dư là phần vượt quá giới hạn đó, trong đó người lao động tạo ra giá trị thặng dư.',
+    },
+  },
+  {
+    id: 10,
+    stage: 2,
+    stageTitle: 'Ai tạo ra giá trị?',
+    coin: 32000,
+    difficulty: 'Trung bình',
+    title: 'Giá trị thặng dư tuyệt đối',
+    scene:
+      'Sổ chấm công bí mật cho thấy ngày lao động tăng từ 8 lên 10 giờ, trong khi thời gian lao động tất yếu và tiền công đều không đổi.',
+    prompt:
+      'Ngày lao động tăng từ 8 lên 10 giờ, thời gian lao động tất yếu vẫn là 4 giờ. Đây là phương pháp nào?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Giá trị thặng dư tương đối',
+        feedback:
+          'Giá trị thặng dư tương đối đòi hỏi thời gian lao động tất yếu được rút ngắn trong khi ngày lao động không đổi. Ở đây, thời gian tất yếu vẫn là 4 giờ và tổng ngày lao động bị kéo dài.',
+      },
+      {
+        id: 'B',
+        text: 'Giá trị thặng dư tuyệt đối',
+        feedback:
+          'Chính xác. Khi ngày lao động được kéo dài từ 8 lên 10 giờ, thời gian lao động thặng dư tăng từ 4 lên 6 giờ. Đây là phương pháp sản xuất giá trị thặng dư tuyệt đối.',
+      },
+      {
+        id: 'C',
+        text: 'Giá trị thặng dư siêu ngạch do giá bán tăng',
+        feedback:
+          'Việc giá bán thay đổi không phải dữ kiện của tình huống. Câu hỏi chỉ mô tả sự thay đổi độ dài ngày lao động và phần thời gian lao động thặng dư.',
+      },
+      {
+        id: 'D',
+        text: 'Không tạo thêm giá trị thặng dư',
+        feedback:
+          'Thời gian lao động thặng dư tăng thêm hai giờ, nên lượng giá trị thặng dư được tạo ra có khả năng tăng nếu các điều kiện khác không đổi.',
+      },
+    ],
+    correctAnswer: 'B',
+    conclusion:
+      'Giá trị thặng dư tuyệt đối được tạo ra bằng cách kéo dài ngày lao động vượt quá thời gian lao động tất yếu, hoặc tăng cường độ lao động trong những giới hạn nhất định. Trong tình huống, ngày lao động tăng hai giờ còn thời gian tất yếu giữ nguyên, nên toàn bộ phần tăng thêm thuộc thời gian lao động thặng dư.',
+    evidence: {
+      id: 'E10',
+      index: 10,
+      code: 'TIMESHEET-X10',
+      title: 'Sổ chấm công bí mật',
+      category: 'Chứng cứ nội bộ',
+      lines: [
+        'Ca hợp đồng: 8 giờ',
+        'Ca thực tế: 10 giờ',
+        'Thời gian tất yếu: 4 giờ · Tiền công không đổi',
+      ],
+      highlight: 'Thời gian lao động thặng dư tăng từ 4 lên 6 giờ.',
+    },
+    lifelines: {
+      eliminate: ['C', 'D'],
+      poll: { A: 33, B: 53, C: 9, D: 5 },
+      npc: {
+        id: 'lyra',
+        name: 'Lyra',
+        role: 'Công nhân Novus Steel',
+        hint:
+          'Không có dữ kiện nào cho thấy bốn giờ đầu được rút ngắn. Chúng tôi chỉ bị giữ lại nhà máy lâu hơn.',
+      },
+      theory:
+        'Giá trị thặng dư tuyệt đối phát sinh khi kéo dài ngày lao động vượt quá thời gian lao động tất yếu. Điểm nhận diện là độ dài ngày lao động tăng, trong khi thời gian lao động tất yếu chưa giảm.',
+    },
+  },
 ] as const satisfies readonly Question[]
 
 export const coinLadder = [
