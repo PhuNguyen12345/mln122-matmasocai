@@ -1,7 +1,7 @@
 import type { GameState } from '../types/game'
 import { createInitialState } from './gameEngine'
 
-const STORAGE_KEY = 'mat-ma-so-cai:game:v2'
+const STORAGE_KEY = 'mat-ma-so-cai:game:v3'
 
 export function loadGame(questionCount: number): GameState {
   const fallback = createInitialState()
@@ -27,6 +27,11 @@ export function loadGame(questionCount: number): GameState {
           : 0,
       currentIndex: parsed.currentIndex,
       usedLifelines: { ...fallback.usedLifelines, ...parsed.usedLifelines },
+      unlockedEvidence: parsed.unlockedEvidence,
+      answeredQuestions: Array.isArray(parsed.answeredQuestions) ? parsed.answeredQuestions : [],
+      correctOnFirstAttempt: Array.isArray(parsed.correctOnFirstAttempt)
+        ? parsed.correctOnFirstAttempt
+        : [],
     }
   } catch {
     return fallback

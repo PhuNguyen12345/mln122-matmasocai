@@ -8,6 +8,7 @@ import type {
   AnswerId,
   GameState,
   LifelineId,
+  NpcId,
   Question,
 } from './types/game'
 
@@ -44,6 +45,13 @@ const lifelineMeta: Array<{
     description: 'Tra cứu khái niệm liên quan',
   },
 ]
+
+const npcMeta: Record<NpcId, { name: string; role: string; initial: string }> = {
+  mara: { name: 'Mara', role: 'Tiểu thương Novus', initial: 'M' },
+  lyra: { name: 'Lyra', role: 'Công nhân Novus Steel', initial: 'L' },
+  varen: { name: 'Varen', role: 'Kỹ sư hệ thống Novus', initial: 'V' },
+  auren: { name: 'Auren', role: 'Thanh tra kinh tế', initial: 'A' },
+}
 
 function formatCoin(value: number) {
   return new Intl.NumberFormat('vi-VN').format(value)
@@ -89,7 +97,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           <span>Nhận hồ sơ điều tra</span>
           <span aria-hidden="true">→</span>
         </button>
-        <p className="intro-note">Hồ sơ hoàn chỉnh · 4 chặng điều tra · Câu 1–15</p>
+        <p className="intro-note">Content Spec V1.0 · 4 chương điều tra · Câu 1–15</p>
       </section>
 
       <div className="intro-status" aria-hidden="true">
@@ -123,12 +131,13 @@ function BriefingScreen({ onContinue }: { onContinue: () => void }) {
           <p className="terminal-label">Thông điệp từ M.O.N.E.Y.</p>
           <h1>Chào mừng, Điều tra viên.</h1>
           <p>
-            Thành phố Novus đang thiếu lương thực dù các kho vẫn còn đầy. Mỗi
-            câu trả lời đúng sẽ mở khóa một phần sự thật trong The Ledger.
+            Một cuộc khủng hoảng tại Novus nối thị trường, nhà máy, dòng tư bản
+            và quyền lực độc quyền vào cùng một Sổ Cái. Mỗi kết luận đúng sẽ mở
+            khóa một chứng cứ trong The Hidden Ledger.
           </p>
           <blockquote>
-            “Trả lời sai không khiến bạn mất tiền. Nhưng có thể khiến một bằng
-            chứng bị chôn vùi.”
+            “Đừng chỉ nhớ định nghĩa. Hãy đọc quan hệ giữa dữ kiện, biến số và
+            lợi ích đang bị che khuất.”
           </blockquote>
         </div>
       </section>
@@ -147,7 +156,7 @@ function BriefingScreen({ onContinue }: { onContinue: () => void }) {
         <article>
           <span className="protocol-index">03</span>
           <h2>Chứng cứ sống</h2>
-          <p>Trả lời đúng để thu thập hồ sơ và lần theo quyền lực đứng sau khủng hoảng.</p>
+          <p>Mỗi đáp án đều có phản hồi; trả lời đúng để mở chứng cứ và kết luận hồ sơ.</p>
         </article>
       </section>
 
@@ -170,17 +179,17 @@ function EvidenceVisual({ question }: { question: Question }) {
         </div>
         <div className="evidence-glyph">
           {question.id === 1 && <><span className="sack" /><span className="sack sack--two" /><span className="sack sack--three" /></>}
-          {question.id === 2 && <><span className="map-node map-node--one" /><span className="map-node map-node--two" /><span className="map-node map-node--three" /><span className="map-line" /></>}
-          {question.id === 3 && <><span className="contract-line" /><span className="contract-line contract-line--two" /><span className="contract-seal">35</span></>}
-          {question.id === 4 && <><span className="bread-shape" /><span className="scan-line" /></>}
+          {question.id === 2 && <><span className="contract-line" /><span className="contract-line contract-line--two" /><span className="contract-seal">N/D</span></>}
+          {question.id === 3 && <><span className="shift-bar shift-bar--necessary">4H</span><span className="shift-bar shift-bar--surplus">7H</span></>}
+          {question.id === 4 && <><span className="shift-bar shift-bar--necessary">10</span><span className="shift-bar shift-bar--surplus">20</span></>}
           {question.id === 5 && <><span className="warehouse" /><span className="alert-wave" /></>}
           {question.id === 6 && <><span className="contract-line" /><span className="contract-line contract-line--two" /><span className="contract-seal">8H</span></>}
-          {question.id === 7 && <><span className="map-node map-node--one" /><span className="map-node map-node--two" /><span className="map-node map-node--three" /><span className="map-line" /></>}
-          {question.id === 8 && <><span className="value-pulse">240</span><span className="scan-line" /></>}
-          {question.id === 9 && <><span className="shift-bar shift-bar--necessary">4H</span><span className="shift-bar shift-bar--surplus">4H</span></>}
-          {question.id === 10 && <><span className="shift-bar shift-bar--necessary">4H</span><span className="shift-bar shift-bar--surplus shift-bar--extended">6H</span></>}
+          {question.id === 7 && <><span className="value-pulse">SL</span><span className="scan-line" /></>}
+          {question.id === 8 && <><span className="value-pulse">180</span><span className="scan-line" /></>}
+          {question.id === 9 && <><span className="shift-bar shift-bar--necessary">3H</span><span className="shift-bar shift-bar--surplus">5H</span></>}
+          {question.id === 10 && <><span className="shift-bar shift-bar--necessary">3H</span><span className="shift-bar shift-bar--surplus shift-bar--extended">6H</span></>}
           {question.id === 11 && <><span className="shift-bar shift-bar--necessary shift-bar--short">3H</span><span className="shift-bar shift-bar--surplus shift-bar--productivity">5H</span></>}
-          {question.id === 12 && <><span className="capital-ring capital-ring--one">40</span><span className="capital-ring capital-ring--two">20</span><span className="capital-ring capital-ring--three">10</span></>}
+          {question.id === 12 && <><span className="capital-ring capital-ring--one">300</span><span className="capital-ring capital-ring--two">700</span><span className="capital-ring capital-ring--three">+</span></>}
           {question.id === 13 && <><span className="merge-node merge-node--one">A</span><span className="merge-node merge-node--two">B</span><span className="merge-node merge-node--three">C</span><span className="merge-arrow">→</span></>}
           {question.id === 14 && <><span className="voss-core">V</span><span className="voss-orbit voss-orbit--one" /><span className="voss-orbit voss-orbit--two" /><span className="voss-orbit voss-orbit--three" /></>}
           {question.id === 15 && <><span className="ledger-lock">M</span><span className="scan-line scan-line--danger" /></>}
@@ -234,17 +243,21 @@ type ModalKind = 'fifty' | 'npc' | 'poll' | 'theory' | 'evidence' | null
 function Modal({
   kind,
   question,
+  consultedNpc,
   unlockedQuestions,
+  onSelectNpc,
   onClose,
 }: {
   kind: Exclude<ModalKind, null>
   question: Question
+  consultedNpc: NpcId | null
   unlockedQuestions: Question[]
+  onSelectNpc: (npcId: NpcId) => void
   onClose: () => void
 }) {
   const titleByKind = {
     fifty: 'Nhãn quan kinh tế',
-    npc: `Kết nối: ${question.lifelines.npc.name}`,
+    npc: consultedNpc ? `Kết nối: ${npcMeta[consultedNpc].name}` : 'Chọn chủ thể tham vấn',
     poll: 'Thăm dò Novus',
     theory: 'Hồ sơ lý luận',
     evidence: 'Kho chứng cứ',
@@ -285,15 +298,33 @@ function Modal({
         )}
 
         {kind === 'npc' && (
-          <div className="npc-consultation">
-            <div className={`npc-avatar npc-avatar--${question.lifelines.npc.id}`}>
-              {question.lifelines.npc.name.slice(0, 1)}
-              <span className="signal-ring" />
-            </div>
-            <div>
-              <span>{question.lifelines.npc.role}</span>
-              <blockquote>“{question.lifelines.npc.hint}”</blockquote>
-            </div>
+          <div>
+            {consultedNpc ? (
+              <div className="npc-consultation">
+                <div className={`npc-avatar npc-avatar--${consultedNpc}`}>
+                  {npcMeta[consultedNpc].initial}
+                  <span className="signal-ring" />
+                </div>
+                <div>
+                  <strong>{npcMeta[consultedNpc].name}</strong>
+                  <span>{npcMeta[consultedNpc].role}</span>
+                  <blockquote>“{question.lifelines.npcHints[consultedNpc]}”</blockquote>
+                </div>
+              </div>
+            ) : (
+              <div className="npc-picker">
+                <p>Chọn một góc nhìn. Quyền tham vấn chỉ được dùng một lần trong lượt chơi.</p>
+                <div className="npc-picker__grid">
+                  {(Object.keys(npcMeta) as NpcId[]).map((npcId) => (
+                    <button key={npcId} type="button" onClick={() => onSelectNpc(npcId)}>
+                      <span className={`npc-avatar npc-avatar--${npcId}`}>{npcMeta[npcId].initial}</span>
+                      <span><strong>{npcMeta[npcId].name}</strong><small>{npcMeta[npcId].role}</small></span>
+                      <i aria-hidden="true">→</i>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -420,7 +451,7 @@ function GameScreen({
           <LogoMark />
           <div>
             <strong>Mật mã Sổ Cái</strong>
-            <span>{question.stageTitle} / Chặng {String(question.stage).padStart(2, '0')}</span>
+            <span>{question.stageTitle} / Chương {String(question.stage).padStart(2, '0')}</span>
           </div>
         </div>
         <div className="game-header__status">
@@ -460,11 +491,15 @@ function GameScreen({
 
         <section className="question-panel" aria-live="polite">
           <div className="question-topline">
-            <span>Chặng {String(question.stage).padStart(2, '0')} / Câu {String(question.id).padStart(2, '0')}</span>
+            <span>Chương {String(question.stage).padStart(2, '0')} / Câu {String(question.id).padStart(2, '0')}</span>
             <span className="difficulty">{question.difficulty}</span>
             <span className="coin-value">{formatCoin(question.coin)} Coin</span>
           </div>
-          <p className="stage-title">{question.stageTitle}</p>
+          <p className="stage-title">{question.topic}</p>
+          <div className="money-prompt">
+            <span>M.O.N.E.Y.</span>
+            <p>{question.moneyDialogue.before}</p>
+          </div>
           <h1>{question.prompt}</h1>
 
           <div className="answer-grid">
@@ -510,6 +545,12 @@ function GameScreen({
                 </div>
               </div>
               <p>{selectedOption.feedback}</p>
+              <p className="money-response">
+                <span>M.O.N.E.Y.</span>{' '}
+                {state.answerStatus === 'correct'
+                  ? question.moneyDialogue.correct
+                  : question.moneyDialogue.wrong}
+              </p>
               {state.answerStatus === 'correct' && (
                 <>
                   <div className="conclusion-box">
@@ -525,12 +566,15 @@ function GameScreen({
                       {question.evidence.lines.map((line) => <li key={line}>{line}</li>)}
                     </ul>
                     <p>{question.evidence.highlight}</p>
+                    <small>{question.moneyDialogue.unlock}</small>
                   </div>
-                  {question.id === 14 && (
+                  {question.externalInterruption && (
                     <div className="system-interruption">
                       <span>Tín hiệu bị can thiệp</span>
-                      <p>“Đáp án B… không được hệ thống cho phép.” — M.O.N.E.Y.</p>
-                      <strong>Selene Voss: “Điều tra viên, hãy dừng lại.”</strong>
+                      <p>“Kênh dữ liệu ngoài vừa giành quyền phát.” — M.O.N.E.Y.</p>
+                      <strong>
+                        {question.externalInterruption.speaker === 'selene' ? 'Selene Voss' : question.externalInterruption.speaker}: “{question.externalInterruption.dialogue}”
+                      </strong>
                     </div>
                   )}
                 </>
@@ -545,12 +589,14 @@ function GameScreen({
                 {state.answerStatus === 'correct' && (
                   <button type="button" onClick={onNext}>
                     {question.id === 5
-                      ? 'Mở tầng dữ liệu thứ hai'
+                      ? 'Mở hồ sơ Novus Steel'
                       : question.id === 10
-                        ? 'Mở cuộc đua năng suất'
-                        : question.id === 15
-                          ? 'Mở Sổ Cái Ẩn'
-                          : 'Thu chứng cứ & tiếp tục'}
+                        ? 'Theo dấu hồ sơ hiệu suất'
+                        : question.id === 13
+                          ? 'Xâm nhập trung tâm Voss'
+                          : question.id === 15
+                            ? 'Mở Sổ Cái Ẩn'
+                            : 'Thu chứng cứ & tiếp tục'}
                   </button>
                 )}
               </div>
@@ -571,73 +617,54 @@ function GameScreen({
   )
 }
 
-function StageTransitionScreen({
-  unlockedQuestions,
-  onContinue,
-}: {
-  unlockedQuestions: Question[]
-  onContinue: () => void
-}) {
-  return (
-    <main className="checkpoint-screen">
-      <div className="checkpoint-grid" aria-hidden="true" />
-      <section className="checkpoint-content">
-        <span className="checkpoint-kicker">Mốc an toàn 01 / Đã giải mã</span>
-        <div className="checkpoint-icon" aria-hidden="true">✓</div>
-        <h1>Hồ sơ thị trường<br />đã được mở.</h1>
-        <p>
-          Novus không thật sự hết lương thực. Dòng cung đã bị khóa và nỗi sợ
-          được tạo ra có chủ ý. Nhưng một câu hỏi lớn hơn vừa xuất hiện: ai đang
-          tạo ra giá trị trong các nhà máy?
-        </p>
-        <div className="checkpoint-stats">
-          <div><strong>05</strong><span>Câu đã giải</span></div>
-          <div><strong>{String(unlockedQuestions.length).padStart(2, '0')}</strong><span>Chứng cứ</span></div>
-          <div><strong>1K</strong><span>Coin an toàn</span></div>
-        </div>
-        <div className="evidence-tape">
-          {unlockedQuestions.map((question) => (
-            <span key={question.id}>E{String(question.id).padStart(2, '0')}</span>
-          ))}
-        </div>
-        <div className="next-stage-teaser">
-          <span>Thông điệp từ Lyra</span>
-          <blockquote>“Có hàng trở lại rồi. Nhưng tại sao nhà máy vẫn bắt công nhân làm việc đến kiệt sức?”</blockquote>
-          <strong>Chặng 02 — Ai tạo ra giá trị?</strong>
-          <small>Câu 6–10 · Tầng dữ liệu thứ hai đã mở</small>
-        </div>
-        <button className="primary-cta" type="button" onClick={onContinue}>
-          <span>Tiến vào khu sản xuất</span>
-          <span aria-hidden="true">→</span>
-        </button>
-      </section>
-    </main>
-  )
-}
+const transitionPresentation = {
+  5: {
+    kicker: 'Mốc an toàn 01 / Hồ sơ thị trường đã mở',
+    title: 'Quyền tiếp cận hàng hóa\nđã bị can thiệp.',
+    next: 'Chương 02 — Sức lao động và giá trị thặng dư',
+    note: 'Câu 6–10 · Nguồn tín hiệu dẫn đến Novus Steel',
+    action: 'Tiến vào Novus Steel',
+  },
+  10: {
+    kicker: 'Mốc an toàn 02 / Sổ sản xuất đã mở',
+    title: 'Cấu trúc ngày lao động\nđã lộ diện.',
+    next: 'Chương 02 — Giá trị thặng dư siêu ngạch',
+    note: 'Câu 11 · Một hồ sơ hiệu suất bất thường vừa xuất hiện',
+    action: 'Theo dấu hồ sơ hiệu suất',
+  },
+  13: {
+    kicker: 'Điểm chuyển chương / Bản đồ sở hữu hoàn thành',
+    title: 'Quyền kiểm soát đang\nhội tụ về một trung tâm.',
+    next: 'Chương 04 — Cạnh tranh và độc quyền',
+    note: 'Câu 14–15 · Trung tâm kiểm soát Voss đã được định vị',
+    action: 'Xâm nhập trung tâm Voss',
+  },
+} as const
 
-function CheckpointScreen({
+function StageTransitionScreen({
+  completedQuestion,
   unlockedQuestions,
   onContinue,
 }: {
+  completedQuestion: Question
   unlockedQuestions: Question[]
   onContinue: () => void
 }) {
+  const presentation = transitionPresentation[completedQuestion.id as keyof typeof transitionPresentation]
+  const safeCoin = completedQuestion.id >= 10 ? '32K' : '1K'
+
   return (
     <main className="checkpoint-screen">
       <div className="checkpoint-grid" aria-hidden="true" />
       <section className="checkpoint-content">
-        <span className="checkpoint-kicker">Mốc an toàn 02 / Sổ sản xuất đã mở</span>
+        <span className="checkpoint-kicker">{presentation.kicker}</span>
         <div className="checkpoint-icon" aria-hidden="true">✓</div>
-        <h1>Giá trị thặng dư<br />đã lộ diện.</h1>
-        <p>
-          Lyra và những công nhân Novus tạo ra lượng giá trị lớn hơn giá trị sức
-          lao động của họ. Ca làm bị kéo dài khiến thời gian lao động thặng dư tăng,
-          trong khi tiền công không đổi.
-        </p>
+        <h1>{presentation.title.split('\n').map((line, index) => <span key={line}>{index > 0 && <br />}{line}</span>)}</h1>
+        <p>{completedQuestion.transitionAfter?.dialogue}</p>
         <div className="checkpoint-stats">
-          <div><strong>10</strong><span>Câu đã giải</span></div>
+          <div><strong>{String(completedQuestion.id).padStart(2, '0')}</strong><span>Câu đã giải</span></div>
           <div><strong>{String(unlockedQuestions.length).padStart(2, '0')}</strong><span>Chứng cứ</span></div>
-          <div><strong>32K</strong><span>Coin an toàn</span></div>
+          <div><strong>{safeCoin}</strong><span>{completedQuestion.id === 13 ? 'Mốc gần nhất' : 'Coin an toàn'}</span></div>
         </div>
         <div className="evidence-tape">
           {unlockedQuestions.map((question) => (
@@ -646,11 +673,11 @@ function CheckpointScreen({
         </div>
         <div className="next-stage-teaser">
           <span>Cảnh báo từ M.O.N.E.Y.</span>
-          <strong>Chặng 03 — Cuộc đua năng suất</strong>
-          <small>Hệ thống phát hiện một cách thức khác để gia tăng giá trị thặng dư.</small>
+          <strong>{presentation.next}</strong>
+          <small>{presentation.note}</small>
         </div>
         <button className="primary-cta" type="button" onClick={onContinue}>
-          <span>Theo dấu dòng tư bản</span>
+          <span>{presentation.action}</span>
           <span aria-hidden="true">→</span>
         </button>
       </section>
@@ -660,39 +687,41 @@ function CheckpointScreen({
 
 function EndingScreen({
   unlockedQuestions,
+  correctOnFirstAttempt,
   onReplay,
 }: {
   unlockedQuestions: Question[]
+  correctOnFirstAttempt: number
   onReplay: () => void
 }) {
+  const finalQuestion = questions[14]
   return (
     <main className="checkpoint-screen ending-screen">
       <div className="checkpoint-grid" aria-hidden="true" />
       <section className="checkpoint-content ending-content">
         <span className="checkpoint-kicker">The Hidden Ledger / Toàn bộ dữ liệu đã giải mã</span>
         <div className="ending-ledger" aria-hidden="true"><span>M</span></div>
-        <p className="ending-overline">M.O.N.E.Y. xác nhận toàn bộ chứng cứ</p>
+        <p className="ending-overline">1.000.000 Coin / M.O.N.E.Y. xác nhận toàn bộ chứng cứ</p>
         <h1>Bạn đã mở khóa<br />nhãn quan kinh tế.</h1>
         <div className="ending-dialogue">
           <blockquote>
             <span>Selene Voss</span>
-            “Cậu nghĩ vài khái niệm trong giáo trình có thể vận hành một thành phố sao?”
+            “Cạnh tranh là lý do chúng tôi phải lớn mạnh. Đừng trừng phạt người chiến thắng chỉ vì những kẻ khác không theo kịp.”
           </blockquote>
           <blockquote>
             <span>Điều tra viên</span>
-            “Không. Nhưng chúng giúp chúng ta nhìn xuyên qua những điều bà muốn mọi người chỉ nhìn thấy ở bề mặt.”
+            “Công nghệ không trao quyền khóa lựa chọn của cả thành phố. Quy mô phải được đặt trong thể chế ngăn lạm dụng quyền lực.”
           </blockquote>
         </div>
         <div className="checkpoint-stats">
           <div><strong>15</strong><span>Câu đã giải</span></div>
           <div><strong>{String(unlockedQuestions.length).padStart(2, '0')}</strong><span>Chứng cứ</span></div>
-          <div><strong>1M</strong><span>Coin đạt được</span></div>
+          <div><strong>{correctOnFirstAttempt}/15</strong><span>Đúng lần đầu</span></div>
         </div>
         <div className="final-verdict">
           <span>Kết luận điều tra</span>
           <p>
-            Các quy luật kinh tế không bị phá hủy. Chúng đã bị che giấu và bị
-            vận dụng nhằm phục vụ lợi ích của một nhóm chi phối.
+            {finalQuestion.transitionAfter?.dialogue} {finalQuestion.conclusion}
           </p>
         </div>
         <button className="primary-cta" type="button" onClick={onReplay}>
@@ -791,8 +820,16 @@ function App() {
 
   const useLifeline = (id: LifelineId) => {
     if (state.usedLifelines[id] || state.answerStatus) return
+    if (id === 'npc') {
+      setModal('npc')
+      return
+    }
     dispatch({ type: 'USE_LIFELINE', id, question: currentQuestion })
     setModal(id)
+  }
+
+  const selectNpc = (npcId: NpcId) => {
+    dispatch({ type: 'USE_LIFELINE', id: 'npc', question: currentQuestion, npcId })
   }
 
   const restartStage = () => {
@@ -818,25 +855,24 @@ function App() {
   }
 
   if (state.screen === 'transition') {
+    const completedQuestion = questions[(state.activeTransition ?? 5) - 1]
     return (
       <StageTransitionScreen
+        completedQuestion={completedQuestion}
         unlockedQuestions={unlockedQuestions}
-        onContinue={() => dispatch({ type: 'CONTINUE_STAGE_TWO' })}
-      />
-    )
-  }
-
-  if (state.screen === 'checkpoint') {
-    return (
-      <CheckpointScreen
-        unlockedQuestions={unlockedQuestions}
-        onContinue={() => dispatch({ type: 'CONTINUE_STAGE_THREE' })}
+        onContinue={() => dispatch({ type: 'CONTINUE_AFTER_TRANSITION' })}
       />
     )
   }
 
   if (state.screen === 'ending') {
-    return <EndingScreen unlockedQuestions={unlockedQuestions} onReplay={() => dispatch({ type: 'RESET' })} />
+    return (
+      <EndingScreen
+        unlockedQuestions={unlockedQuestions}
+        correctOnFirstAttempt={state.correctOnFirstAttempt.length}
+        onReplay={() => dispatch({ type: 'RESET' })}
+      />
+    )
   }
 
   return (
@@ -855,7 +891,9 @@ function App() {
         <Modal
           kind={modal}
           question={currentQuestion}
+          consultedNpc={state.consultedNpc}
           unlockedQuestions={unlockedQuestions}
+          onSelectNpc={selectNpc}
           onClose={() => setModal(null)}
         />
       )}
