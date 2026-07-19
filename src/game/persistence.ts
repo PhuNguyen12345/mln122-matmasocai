@@ -21,7 +21,10 @@ export function loadGame(questionCount: number): GameState {
     return {
       ...fallback,
       ...parsed,
-      checkpoint: parsed.checkpoint === 5 || parsed.checkpoint === 10 ? parsed.checkpoint : 0,
+      checkpoint:
+        parsed.checkpoint === 5 || parsed.checkpoint === 10 || parsed.checkpoint === 15
+          ? parsed.checkpoint
+          : 0,
       currentIndex: parsed.currentIndex,
       usedLifelines: { ...fallback.usedLifelines, ...parsed.usedLifelines },
     }

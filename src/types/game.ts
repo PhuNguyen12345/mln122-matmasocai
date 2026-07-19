@@ -23,7 +23,7 @@ export interface Question {
   stage: number
   stageTitle: string
   coin: number
-  difficulty: 'Dễ' | 'Trung bình'
+  difficulty: 'Dễ' | 'Trung bình' | 'Khó' | 'Rất khó'
   title: string
   scene: string
   prompt: string
@@ -41,17 +41,18 @@ export interface Question {
       hint: string
     }
     theory: string
+    pollWarning?: string
   }
 }
 
-export type GameScreen = 'intro' | 'briefing' | 'game' | 'transition' | 'checkpoint'
+export type GameScreen = 'intro' | 'briefing' | 'game' | 'transition' | 'checkpoint' | 'ending'
 
 export type LifelineId = 'fifty' | 'npc' | 'poll' | 'theory'
 
 export interface GameState {
   screen: GameScreen
   currentIndex: number
-  checkpoint: 0 | 5 | 10
+  checkpoint: 0 | 5 | 10 | 15
   lives: number
   usedLifelines: Record<LifelineId, boolean>
   eliminatedAnswers: AnswerId[]

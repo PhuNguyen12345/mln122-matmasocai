@@ -89,7 +89,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           <span>Nhận hồ sơ điều tra</span>
           <span aria-hidden="true">→</span>
         </button>
-        <p className="intro-note">Vertical slice · Hai chặng điều tra · Câu 1–10</p>
+        <p className="intro-note">Hồ sơ hoàn chỉnh · 4 chặng điều tra · Câu 1–15</p>
       </section>
 
       <div className="intro-status" aria-hidden="true">
@@ -179,6 +179,11 @@ function EvidenceVisual({ question }: { question: Question }) {
           {question.id === 8 && <><span className="value-pulse">240</span><span className="scan-line" /></>}
           {question.id === 9 && <><span className="shift-bar shift-bar--necessary">4H</span><span className="shift-bar shift-bar--surplus">4H</span></>}
           {question.id === 10 && <><span className="shift-bar shift-bar--necessary">4H</span><span className="shift-bar shift-bar--surplus shift-bar--extended">6H</span></>}
+          {question.id === 11 && <><span className="shift-bar shift-bar--necessary shift-bar--short">3H</span><span className="shift-bar shift-bar--surplus shift-bar--productivity">5H</span></>}
+          {question.id === 12 && <><span className="capital-ring capital-ring--one">40</span><span className="capital-ring capital-ring--two">20</span><span className="capital-ring capital-ring--three">10</span></>}
+          {question.id === 13 && <><span className="merge-node merge-node--one">A</span><span className="merge-node merge-node--two">B</span><span className="merge-node merge-node--three">C</span><span className="merge-arrow">→</span></>}
+          {question.id === 14 && <><span className="voss-core">V</span><span className="voss-orbit voss-orbit--one" /><span className="voss-orbit voss-orbit--two" /><span className="voss-orbit voss-orbit--three" /></>}
+          {question.id === 15 && <><span className="ledger-lock">M</span><span className="scan-line scan-line--danger" /></>}
         </div>
         <div className="evidence-paper__footer">
           <span>{evidence.category}</span>
@@ -205,7 +210,7 @@ function ProgressLadder({ currentQuestion }: { currentQuestion: number }) {
           const questionNumber = 15 - index
           const isCurrent = questionNumber === currentQuestion
           const isComplete = questionNumber < currentQuestion
-          const isAvailable = questionNumber <= 10
+          const isAvailable = questionNumber <= questions.length
           const isSafe = [5, 10, 15].includes(questionNumber)
           return (
             <li
@@ -304,6 +309,9 @@ function Modal({
                   <strong>{answer}</strong>
                 </div>
               ),
+            )}
+            {question.lifelines.pollWarning && (
+              <p className="poll-warning">⚠ {question.lifelines.pollWarning}</p>
             )}
           </div>
         )}
@@ -418,7 +426,7 @@ function GameScreen({
         <div className="game-header__status">
           <button type="button" className="archive-button" onClick={onOpenEvidence}>
             <span>Kho chứng cứ</span>
-            <strong>{state.unlockedEvidence.length}/10</strong>
+            <strong>{state.unlockedEvidence.length}/15</strong>
           </button>
           <div className="lives" aria-label={`${state.lives} mạng điều tra còn lại`}>
             <span>Mạng điều tra</span>
@@ -446,7 +454,7 @@ function GameScreen({
           </div>
           <div className="case-coordinates">
             <span>Sector N-{question.id + 3}</span>
-            <span>Signal {String(14 - question.id).padStart(2, '0')}.4</span>
+            <span>Signal {String(16 - question.id).padStart(2, '0')}.4</span>
           </div>
         </aside>
 
@@ -488,6 +496,9 @@ function GameScreen({
               )
             })}
           </div>
+          <p className="keyboard-hint">
+            Phím tắt: A–D để chọn · Enter để tiếp tục · Esc để đóng hồ sơ
+          </p>
 
           {state.answerStatus && selectedOption && (
             <section className={`feedback-panel feedback-panel--${state.answerStatus}`}>
@@ -500,10 +511,29 @@ function GameScreen({
               </div>
               <p>{selectedOption.feedback}</p>
               {state.answerStatus === 'correct' && (
-                <div className="conclusion-box">
-                  <span>Kết luận hồ sơ</span>
-                  <p>{question.conclusion}</p>
-                </div>
+                <>
+                  <div className="conclusion-box">
+                    <span>Kết luận hồ sơ</span>
+                    <p>{question.conclusion}</p>
+                  </div>
+                  <div className="evidence-unlocked">
+                    <div>
+                      <span>Chứng cứ đã mở khóa</span>
+                      <strong>{question.evidence.id} · {question.evidence.title}</strong>
+                    </div>
+                    <ul>
+                      {question.evidence.lines.map((line) => <li key={line}>{line}</li>)}
+                    </ul>
+                    <p>{question.evidence.highlight}</p>
+                  </div>
+                  {question.id === 14 && (
+                    <div className="system-interruption">
+                      <span>Tín hiệu bị can thiệp</span>
+                      <p>“Đáp án B… không được hệ thống cho phép.” — M.O.N.E.Y.</p>
+                      <strong>Selene Voss: “Điều tra viên, hãy dừng lại.”</strong>
+                    </div>
+                  )}
+                </>
               )}
               <div className="feedback-actions">
                 {state.answerStatus === 'wrong' && state.lives > 0 && (
@@ -517,8 +547,10 @@ function GameScreen({
                     {question.id === 5
                       ? 'Mở tầng dữ liệu thứ hai'
                       : question.id === 10
-                        ? 'Giải mã Sổ sản xuất'
-                        : 'Thu chứng cứ & tiếp tục'}
+                        ? 'Mở cuộc đua năng suất'
+                        : question.id === 15
+                          ? 'Mở Sổ Cái Ẩn'
+                          : 'Thu chứng cứ & tiếp tục'}
                   </button>
                 )}
               </div>
@@ -585,10 +617,10 @@ function StageTransitionScreen({
 
 function CheckpointScreen({
   unlockedQuestions,
-  onReplay,
+  onContinue,
 }: {
   unlockedQuestions: Question[]
-  onReplay: () => void
+  onContinue: () => void
 }) {
   return (
     <main className="checkpoint-screen">
@@ -617,8 +649,54 @@ function CheckpointScreen({
           <strong>Chặng 03 — Cuộc đua năng suất</strong>
           <small>Hệ thống phát hiện một cách thức khác để gia tăng giá trị thặng dư.</small>
         </div>
+        <button className="primary-cta" type="button" onClick={onContinue}>
+          <span>Theo dấu dòng tư bản</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+    </main>
+  )
+}
+
+function EndingScreen({
+  unlockedQuestions,
+  onReplay,
+}: {
+  unlockedQuestions: Question[]
+  onReplay: () => void
+}) {
+  return (
+    <main className="checkpoint-screen ending-screen">
+      <div className="checkpoint-grid" aria-hidden="true" />
+      <section className="checkpoint-content ending-content">
+        <span className="checkpoint-kicker">The Hidden Ledger / Toàn bộ dữ liệu đã giải mã</span>
+        <div className="ending-ledger" aria-hidden="true"><span>M</span></div>
+        <p className="ending-overline">M.O.N.E.Y. xác nhận toàn bộ chứng cứ</p>
+        <h1>Bạn đã mở khóa<br />nhãn quan kinh tế.</h1>
+        <div className="ending-dialogue">
+          <blockquote>
+            <span>Selene Voss</span>
+            “Cậu nghĩ vài khái niệm trong giáo trình có thể vận hành một thành phố sao?”
+          </blockquote>
+          <blockquote>
+            <span>Điều tra viên</span>
+            “Không. Nhưng chúng giúp chúng ta nhìn xuyên qua những điều bà muốn mọi người chỉ nhìn thấy ở bề mặt.”
+          </blockquote>
+        </div>
+        <div className="checkpoint-stats">
+          <div><strong>15</strong><span>Câu đã giải</span></div>
+          <div><strong>{String(unlockedQuestions.length).padStart(2, '0')}</strong><span>Chứng cứ</span></div>
+          <div><strong>1M</strong><span>Coin đạt được</span></div>
+        </div>
+        <div className="final-verdict">
+          <span>Kết luận điều tra</span>
+          <p>
+            Các quy luật kinh tế không bị phá hủy. Chúng đã bị che giấu và bị
+            vận dụng nhằm phục vụ lợi ích của một nhóm chi phối.
+          </p>
+        </div>
         <button className="primary-cta" type="button" onClick={onReplay}>
-          <span>Chơi lại hồ sơ 1–10</span>
+          <span>Điều tra lại từ đầu</span>
           <span aria-hidden="true">↻</span>
         </button>
       </section>
@@ -626,9 +704,32 @@ function CheckpointScreen({
   )
 }
 
+function ResetConfirmation({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={onCancel}>
+      <section
+        className="intel-modal reset-modal"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="reset-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <span className="terminal-label">Xác nhận thao tác</span>
+        <h2 id="reset-title">Đặt lại toàn bộ hồ sơ?</h2>
+        <p>Tiến độ, chứng cứ và bốn quyền trợ giúp của lượt chơi hiện tại sẽ bị xóa.</p>
+        <div className="reset-actions">
+          <button type="button" onClick={onCancel}>Tiếp tục điều tra</button>
+          <button type="button" className="is-danger" onClick={onConfirm}>Đặt lại hồ sơ</button>
+        </div>
+      </section>
+    </div>
+  )
+}
+
 function App() {
   const [state, dispatch] = useReducer(gameReducer, questions.length, loadGame)
   const [modal, setModal] = useState<ModalKind>(null)
+  const [resetRequested, setResetRequested] = useState(false)
 
   const currentQuestion = questions[state.currentIndex]
   const unlockedQuestions = useMemo(
@@ -643,6 +744,38 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [state.screen, state.currentIndex])
+
+  useEffect(() => {
+    const handleKeyboard = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey || event.altKey) return
+      if (event.key === 'Escape') {
+        setModal(null)
+        setResetRequested(false)
+        return
+      }
+      if (state.screen !== 'game' || modal || resetRequested) return
+
+      if (event.key === 'Enter' && state.answerStatus === 'correct') {
+        event.preventDefault()
+        dispatch({ type: 'ADVANCE', question: currentQuestion })
+        return
+      }
+      if (event.key === 'Enter' && state.answerStatus === 'wrong' && state.lives > 0) {
+        event.preventDefault()
+        dispatch({ type: 'RETRY' })
+        return
+      }
+
+      const answerId = event.key.toUpperCase() as AnswerId
+      if (!['A', 'B', 'C', 'D'].includes(answerId) || state.answerStatus || state.lives === 0) return
+      if (state.eliminatedAnswers.includes(answerId) || state.attemptedAnswers.includes(answerId)) return
+      event.preventDefault()
+      dispatch({ type: 'ANSWER', answer: answerId, question: currentQuestion })
+    }
+
+    window.addEventListener('keydown', handleKeyboard)
+    return () => window.removeEventListener('keydown', handleKeyboard)
+  }, [currentQuestion, modal, resetRequested, state.answerStatus, state.attemptedAnswers, state.eliminatedAnswers, state.lives, state.screen])
 
   const answerQuestion = (answer: AnswerId) => {
     dispatch({ type: 'ANSWER', answer, question: currentQuestion })
@@ -667,8 +800,12 @@ function App() {
   }
 
   const resetGame = () => {
-    if (!window.confirm('Đặt lại toàn bộ tiến độ vertical slice?')) return
+    setResetRequested(true)
+  }
+
+  const confirmReset = () => {
     setModal(null)
+    setResetRequested(false)
     dispatch({ type: 'RESET' })
   }
 
@@ -690,7 +827,16 @@ function App() {
   }
 
   if (state.screen === 'checkpoint') {
-    return <CheckpointScreen unlockedQuestions={unlockedQuestions} onReplay={() => dispatch({ type: 'RESET' })} />
+    return (
+      <CheckpointScreen
+        unlockedQuestions={unlockedQuestions}
+        onContinue={() => dispatch({ type: 'CONTINUE_STAGE_THREE' })}
+      />
+    )
+  }
+
+  if (state.screen === 'ending') {
+    return <EndingScreen unlockedQuestions={unlockedQuestions} onReplay={() => dispatch({ type: 'RESET' })} />
   }
 
   return (
@@ -712,6 +858,9 @@ function App() {
           unlockedQuestions={unlockedQuestions}
           onClose={() => setModal(null)}
         />
+      )}
+      {resetRequested && (
+        <ResetConfirmation onCancel={() => setResetRequested(false)} onConfirm={confirmReset} />
       )}
     </>
   )

@@ -25,6 +25,7 @@ export type GameAction =
   | { type: 'RETRY' }
   | { type: 'ADVANCE'; question: Question }
   | { type: 'CONTINUE_STAGE_TWO' }
+  | { type: 'CONTINUE_STAGE_THREE' }
   | { type: 'USE_LIFELINE'; id: LifelineId; question: Question }
   | { type: 'RESTART_STAGE' }
   | { type: 'RESET' }
@@ -69,10 +70,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (action.question.id === 10) {
         return { ...resetQuestionState(state), screen: 'checkpoint', checkpoint: 10 }
       }
+      if (action.question.id === 15) {
+        return { ...resetQuestionState(state), screen: 'ending', checkpoint: 15 }
+      }
       return resetQuestionState({ ...state, currentIndex: state.currentIndex + 1 })
     }
     case 'CONTINUE_STAGE_TWO':
       return resetQuestionState({ ...state, screen: 'game', currentIndex: 5, checkpoint: 5 })
+    case 'CONTINUE_STAGE_THREE':
+      return resetQuestionState({ ...state, screen: 'game', currentIndex: 10, checkpoint: 10 })
     case 'USE_LIFELINE':
       if (state.usedLifelines[action.id] || state.answerStatus || state.lives === 0) {
         return state
@@ -86,7 +92,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             : state.eliminatedAnswers,
       }
     case 'RESTART_STAGE': {
-      const stageStartIndex = state.checkpoint >= 5 ? 5 : 0
+      const stageStartIndex = state.checkpoint >= 10 ? 10 : state.checkpoint >= 5 ? 5 : 0
       return resetQuestionState({
         ...state,
         screen: 'game',

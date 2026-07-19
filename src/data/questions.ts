@@ -670,6 +670,345 @@ export const questions = [
         'Giá trị thặng dư tuyệt đối phát sinh khi kéo dài ngày lao động vượt quá thời gian lao động tất yếu. Điểm nhận diện là độ dài ngày lao động tăng, trong khi thời gian lao động tất yếu chưa giảm.',
     },
   },
+  {
+    id: 11,
+    stage: 3,
+    stageTitle: 'Cuộc đua năng suất',
+    coin: 64000,
+    difficulty: 'Khó',
+    title: 'Giá trị thặng dư tương đối',
+    scene:
+      'Nhà máy không kéo dài ca làm. Công nghệ mới làm giảm giá trị tư liệu sinh hoạt, khiến thời gian cần để tái tạo giá trị sức lao động giảm từ 4 xuống 3 giờ.',
+    prompt:
+      'Ngày lao động vẫn 8 giờ nhưng công nghệ làm thời gian lao động tất yếu giảm từ 4 xuống 3 giờ. Đây là phương pháp nào?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Giá trị thặng dư tuyệt đối',
+        feedback:
+          'Ngày lao động không được kéo dài nên không phải phương pháp tuyệt đối. Sự thay đổi nằm ở việc thời gian lao động tất yếu giảm, làm phần thời gian thặng dư tăng tương ứng.',
+      },
+      {
+        id: 'B',
+        text: 'Giá trị thặng dư tương đối',
+        feedback:
+          'Chính xác. Ngày lao động giữ nguyên 8 giờ nhưng thời gian tất yếu giảm một giờ, khiến thời gian thặng dư tăng từ 4 lên 5 giờ. Đây là giá trị thặng dư tương đối.',
+      },
+      {
+        id: 'C',
+        text: 'Địa tô chênh lệch',
+        feedback:
+          'Địa tô chênh lệch liên quan đến điều kiện sản xuất khác nhau trong nông nghiệp hoặc vị trí đất đai, không liên quan trực tiếp đến việc rút ngắn thời gian lao động tất yếu.',
+      },
+      {
+        id: 'D',
+        text: 'Lợi tức ngân hàng',
+        feedback:
+          'Lợi tức là một hình thức thu nhập gắn với tư bản cho vay. Tình huống đang mô tả sự thay đổi cơ cấu thời gian trong ngày lao động sản xuất.',
+      },
+    ],
+    correctAnswer: 'B',
+    conclusion:
+      'Giá trị thặng dư tương đối được sản xuất thông qua rút ngắn thời gian lao động tất yếu, nhờ tăng năng suất xã hội trong các ngành tạo ra tư liệu sinh hoạt cho người lao động. Khi ngày lao động không đổi, thời gian thặng dư được kéo dài tương ứng.',
+    evidence: {
+      id: 'E11',
+      index: 11,
+      code: 'TECH-RATIO-3/5',
+      title: 'Báo cáo công nghệ',
+      category: 'Dữ liệu năng suất',
+      lines: [
+        'Ngày lao động: 8 giờ',
+        'Thời gian tất yếu: từ 4 giờ xuống 3 giờ',
+        'Thời gian thặng dư mới: 5 giờ',
+      ],
+      highlight: 'Ngày lao động không đổi; tỷ lệ giữa hai phần đã thay đổi.',
+    },
+    lifelines: {
+      eliminate: ['C', 'D'],
+      poll: { A: 38, B: 48, C: 8, D: 6 },
+      npc: {
+        id: 'varen',
+        name: 'Varen',
+        role: 'Kỹ sư hệ thống Novus',
+        hint:
+          'Nhà máy không giữ công nhân lâu hơn. Hãy xem công nghệ đã làm thay đổi tỷ lệ giữa hai phần của ngày lao động thế nào.',
+      },
+      theory:
+        'Giá trị thặng dư tương đối không dựa trên kéo dài ngày lao động. Nó dựa trên tăng năng suất xã hội, làm giảm giá trị sức lao động và rút ngắn thời gian lao động tất yếu.',
+    },
+  },
+  {
+    id: 12,
+    stage: 3,
+    stageTitle: 'Giá trị thặng dư được biến đổi như thế nào?',
+    coin: 125000,
+    difficulty: 'Khó',
+    title: 'Tích lũy tư bản',
+    scene:
+      'Sau một chu kỳ sản xuất, Voss không để toàn bộ phần giá trị dôi ra nằm yên. Phần lớn được đưa trở lại nhà máy dưới dạng máy móc, nhà xưởng và lao động mới.',
+    prompt:
+      'Chủ doanh nghiệp dùng một phần giá trị thặng dư mua thêm máy, mở nhà xưởng và thuê lao động. Đây là quá trình nào?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Tiêu dùng cá nhân',
+        feedback:
+          'Tiêu dùng cá nhân là sử dụng thu nhập để đáp ứng nhu cầu sinh hoạt của chủ sở hữu. Trong tình huống, nguồn lực được đưa trở lại sản xuất để mở rộng quy mô.',
+      },
+      {
+        id: 'B',
+        text: 'Tích lũy tư bản',
+        feedback:
+          'Chính xác. Một phần giá trị thặng dư được chuyển hóa thành máy móc, nhà xưởng và sức lao động mới, trở thành tư bản bổ sung cho chu kỳ sản xuất tiếp theo.',
+      },
+      {
+        id: 'C',
+        text: 'Trao đổi ngang giá',
+        feedback:
+          'Trao đổi ngang giá mô tả quan hệ trao đổi hàng hóa theo giá trị. Câu hỏi đang nói về cách sử dụng giá trị thặng dư sau một chu kỳ sản xuất.',
+      },
+      {
+        id: 'D',
+        text: 'Giảm năng suất lao động',
+        feedback:
+          'Đầu tư thêm máy móc, tổ chức sản xuất và lao động thường hướng đến mở rộng sản lượng hoặc nâng cao năng suất, không phải làm giảm năng suất.',
+      },
+    ],
+    correctAnswer: 'B',
+    conclusion:
+      'Tích lũy tư bản là quá trình chuyển hóa một phần giá trị thặng dư thành tư bản mới để mở rộng sản xuất. Bản chất của nó không phải tích trữ tiền thụ động, mà là tái đầu tư vào tư liệu sản xuất và sức lao động nhằm tạo ra chu kỳ sản xuất mở rộng.',
+    evidence: {
+      id: 'E12',
+      index: 12,
+      code: 'REINVEST-70',
+      title: 'Kế hoạch tái đầu tư',
+      category: 'Hồ sơ tài chính',
+      lines: [
+        'Máy móc mới: 40%',
+        'Mở rộng nhà xưởng: 20% · Đào tạo: 10%',
+        'Dự phòng và tiêu dùng: 30%',
+      ],
+      highlight: '70% giá trị thặng dư được đưa trở lại sản xuất.',
+    },
+    lifelines: {
+      eliminate: ['C', 'D'],
+      poll: { A: 22, B: 62, C: 9, D: 7 },
+      npc: {
+        id: 'varen',
+        name: 'Varen',
+        role: 'Kỹ sư hệ thống Novus',
+        hint:
+          'Hãy xem phần giá trị dôi ra đang được dùng để tiêu xài hay được biến thành những yếu tố của một chu kỳ sản xuất mới.',
+      },
+      theory:
+        'Tích lũy tư bản là tư bản hóa giá trị thặng dư. Một phần giá trị thặng dư được chuyển thành tư liệu sản xuất và sức lao động bổ sung, làm tăng quy mô sản xuất trong chu kỳ tiếp theo.',
+    },
+  },
+  {
+    id: 13,
+    stage: 3,
+    stageTitle: 'Giá trị thặng dư được biến đổi như thế nào?',
+    coin: 250000,
+    difficulty: 'Khó',
+    title: 'Tích tụ và tập trung tư bản',
+    scene:
+      'Hồ sơ tài chính cho thấy Voss vừa mở rộng bằng lợi nhuận của chính mình, vừa mua lại các doanh nghiệp vận tải, ngân hàng và nhà cung cấp nguyên liệu.',
+    prompt:
+      'Doanh nghiệp A dùng giá trị thặng dư để mở rộng; sau đó mua lại B và C. Nhận định nào đúng?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Trường hợp đầu là tích tụ; trường hợp sau là tập trung tư bản',
+        feedback:
+          'Chính xác. Mở rộng bằng cách tư bản hóa giá trị thặng dư là tích tụ. Mua lại hoặc hợp nhất các tư bản đã tồn tại là tập trung tư bản.',
+      },
+      {
+        id: 'B',
+        text: 'Cả hai chỉ là tích tụ tư bản',
+        feedback:
+          'Việc mua lại B và C không làm tổng tư bản xã hội tăng ngay, mà gom các tư bản đang tồn tại vào một chủ thể lớn hơn. Đây là tập trung, không phải tích tụ.',
+      },
+      {
+        id: 'C',
+        text: 'Trường hợp đầu là tập trung; trường hợp sau là tích tụ',
+        feedback:
+          'Bạn đã đảo ngược hai khái niệm. Tích tụ hình thành từ tích lũy nội bộ; tập trung hình thành từ hợp nhất hoặc thôn tính những tư bản đã tồn tại.',
+      },
+      {
+        id: 'D',
+        text: 'Cả hai không liên quan đến quy mô tư bản',
+        feedback:
+          'Cả hai tình huống đều làm quy mô tư bản cá biệt của doanh nghiệp A tăng, nhưng nguồn tạo ra phần tăng thêm khác nhau.',
+      },
+    ],
+    correctAnswer: 'A',
+    conclusion:
+      'Tích tụ tư bản làm tăng quy mô tư bản cá biệt thông qua tích lũy giá trị thặng dư, đồng thời có thể làm tổng tư bản xã hội tăng. Tập trung tư bản làm tăng quy mô tư bản cá biệt bằng cách hợp nhất, sáp nhập hoặc mua lại các tư bản đã tồn tại.',
+    evidence: {
+      id: 'E13',
+      index: 13,
+      code: 'ACQUIRE-3/2/4',
+      title: 'Hồ sơ mua lại doanh nghiệp',
+      category: 'Mạng lưới sở hữu',
+      lines: [
+        'Đã mua 3 công ty vận tải',
+        'Đã mua 2 ngân hàng',
+        'Đã mua 4 nhà cung cấp nguyên liệu',
+      ],
+      highlight: 'Các tư bản đã tồn tại được gom về cùng một chủ thể.',
+    },
+    lifelines: {
+      eliminate: ['C', 'D'],
+      poll: { A: 44, B: 38, C: 12, D: 6 },
+      npc: {
+        id: 'varen',
+        name: 'Varen',
+        role: 'Kỹ sư hệ thống Novus',
+        hint:
+          'Một trường hợp tạo phần tư bản mới từ kết quả sản xuất của chính doanh nghiệp. Trường hợp kia chỉ gom những tư bản đã có về cùng một chủ.',
+      },
+      theory:
+        'Tích tụ và tập trung đều làm tư bản cá biệt lớn lên. Điểm khác biệt là tích tụ dựa trên tư bản hóa giá trị thặng dư, còn tập trung dựa trên tổ chức lại và hợp nhất các tư bản đã tồn tại.',
+    },
+  },
+  {
+    id: 14,
+    stage: 4,
+    stageTitle: 'Ai kiểm soát Novus?',
+    coin: 500000,
+    difficulty: 'Khó',
+    title: 'Hình thành tổ chức độc quyền',
+    scene:
+      'Voss kiểm soát vận tải, tín dụng và dữ liệu bán lẻ. Những doanh nghiệp tưởng độc lập đều nối về cùng một công ty mẹ và bị áp đặt hợp đồng loại trừ.',
+    prompt:
+      'Voss kiểm soát vận tải, tín dụng, mua đối thủ và ép cửa hàng ký hợp đồng loại trừ. Hiện tượng này phản ánh điều gì?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Cạnh tranh hoàn toàn tự do giữa các chủ thể ngang bằng',
+        feedback:
+          'Các chủ thể không còn ở vị thế tương đối ngang bằng. Voss kiểm soát những điều kiện mà đối thủ cần để cạnh tranh, như tín dụng, vận tải và kênh phân phối.',
+      },
+      {
+        id: 'B',
+        text: 'Tập trung tư bản dẫn đến hình thành tổ chức độc quyền',
+        feedback:
+          'Chính xác. Quá trình mua lại và tập trung quyền kiểm soát đã tạo ra một tổ chức đủ sức chi phối thị trường và áp đặt điều kiện lên các chủ thể khác.',
+      },
+      {
+        id: 'C',
+        text: 'Xóa bỏ hoàn toàn sản xuất hàng hóa',
+        feedback:
+          'Hàng hóa vẫn tiếp tục được sản xuất và trao đổi. Vấn đề không phải sản xuất hàng hóa biến mất mà là quyền lực thị trường tập trung vào một tổ chức lớn.',
+      },
+      {
+        id: 'D',
+        text: 'Mọi doanh nghiệp nhỏ tự nguyện ngừng hoạt động',
+        feedback:
+          'Hồ sơ cho thấy doanh nghiệp nhỏ bị tăng phí, mất tín dụng hoặc bị ép ký hợp đồng. Việc rời thị trường không hoàn toàn là lựa chọn tự nguyện.',
+      },
+    ],
+    correctAnswer: 'B',
+    conclusion:
+      'Tích tụ và tập trung tư bản đến một trình độ cao có thể hình thành các tổ chức độc quyền đủ khả năng chi phối sản xuất, tín dụng, phân phối hoặc giá cả. Độc quyền không làm cạnh tranh biến mất; cạnh tranh tiếp tục diễn ra dưới những hình thức và cấp độ mới.',
+    evidence: {
+      id: 'E14',
+      index: 14,
+      code: 'VOSS-NET-01',
+      title: 'Bản đồ sở hữu Voss',
+      category: 'Sơ đồ quyền lực',
+      lines: [
+        'Voss Logistics · Voss Credit',
+        'Voss Retail Data',
+        'Voss Industrial Systems',
+      ],
+      highlight: 'Các công ty tưởng độc lập đều nối về một công ty mẹ.',
+    },
+    lifelines: {
+      eliminate: ['C', 'D'],
+      poll: { A: 31, B: 39, C: 8, D: 22 },
+      pollWarning:
+        'Dữ liệu dư luận có dấu hiệu bị tác động. Kết quả thăm dò không được xem là chứng cứ quyết định.',
+      npc: {
+        id: 'auren',
+        name: 'Auren',
+        role: 'Thanh tra kinh tế Novus',
+        hint:
+          'Quy mô lớn chưa đủ để kết luận. Hãy tìm dấu hiệu cho thấy Voss có thể quyết định ai được vay, ai được vận chuyển và ai được tiếp cận người mua.',
+      },
+      theory:
+        'Độc quyền hình thành trên cơ sở tập trung sản xuất và tập trung tư bản đạt trình độ cao. Tổ chức độc quyền có khả năng chi phối một phần đáng kể thị trường, nhưng cạnh tranh vẫn tồn tại giữa và bên trong các tổ chức kinh tế.',
+    },
+  },
+  {
+    id: 15,
+    stage: 4,
+    stageTitle: 'Ai kiểm soát Novus?',
+    coin: 1000000,
+    difficulty: 'Rất khó',
+    title: 'Giải pháp tổng hợp cho Novus',
+    scene:
+      'Toàn bộ hồ sơ hội tụ: khan hiếm giả, ca làm kéo dài, tiền công không đổi và một tập đoàn kiểm soát tín dụng, vận tải, dữ liệu cùng mạng lưới phân phối.',
+    prompt:
+      'Giải pháp nào phù hợp nhất để xử lý cuộc khủng hoảng mà vẫn duy trì vai trò của thị trường và động lực sản xuất?',
+    answers: [
+      {
+        id: 'A',
+        text: 'Đóng toàn bộ doanh nghiệp và để cơ quan quản lý quyết định mọi hoạt động',
+        feedback:
+          'Phương án này tuyệt đối hóa quản lý hành chính và phủ nhận tính chủ động của các chủ thể thị trường. Nó cũng không bảo đảm cơ quan quản lý có đủ thông tin để trực tiếp quyết định mọi hoạt động kinh tế.',
+      },
+      {
+        id: 'B',
+        text: 'Không can thiệp vì mọi kết quả thị trường đều tự động hợp lý',
+        feedback:
+          'Thị trường có vai trò phân bổ nguồn lực và tạo động lực, nhưng không tự động loại bỏ độc quyền, thông tin bất cân xứng hay hành vi chuyển chi phí sang người lao động và xã hội.',
+      },
+      {
+        id: 'C',
+        text: 'Minh bạch thông tin; xử lý độc quyền, khôi phục cạnh tranh; bảo vệ người lao động và nâng cao năng suất',
+        feedback:
+          'Chính xác. Phương án này xử lý nguồn gốc của khủng hoảng mà không xóa bỏ thị trường: khôi phục thông tin, cạnh tranh và lưu thông; hạn chế quyền lực độc quyền; bảo vệ quyền lợi hợp pháp và thúc đẩy năng suất.',
+      },
+      {
+        id: 'D',
+        text: 'Chia đều hàng hóa hiện có nhưng không thay đổi cơ chế sản xuất và lưu thông',
+        feedback:
+          'Chia hàng giải quyết khó khăn trước mắt nhưng không mở lại vận tải, không xử lý thông tin giả, quan hệ lao động hay quyền lực độc quyền. Khủng hoảng sẽ sớm tái diễn.',
+      },
+    ],
+    correctAnswer: 'C',
+    conclusion:
+      'Giải pháp phù hợp phải đồng thời tôn trọng các quy luật thị trường và khắc phục những khuyết tật của thị trường. Minh bạch thông tin, bảo vệ cạnh tranh, hạn chế lạm dụng vị thế độc quyền, bảo đảm quyền lợi hợp pháp của người lao động và hỗ trợ đổi mới năng suất giúp xử lý cả nguyên nhân lẫn hậu quả.',
+    evidence: {
+      id: 'E15',
+      index: 15,
+      code: 'HIDDEN-LEDGER',
+      title: 'Sổ Cái Ẩn',
+      category: 'Chứng cứ tối mật',
+      lines: [
+        'Mục tiêu: tối đa hóa quyền kiểm soát của Voss Consortium',
+        'Công cụ: tín dụng, vận tải, dữ liệu, hợp đồng loại trừ',
+        'Chi phí xã hội: không được đưa vào mô hình tối ưu hóa',
+      ],
+      highlight: 'Khủng hoảng được tạo ra nhằm củng cố quyền lực thị trường.',
+    },
+    lifelines: {
+      eliminate: ['A', 'D'],
+      poll: { A: 16, B: 34, C: 38, D: 12 },
+      pollWarning:
+        'Dữ liệu dư luận có dấu hiệu bị tác động. Kết quả thăm dò không được xem là chứng cứ quyết định.',
+      npc: {
+        id: 'auren',
+        name: 'Auren',
+        role: 'Thanh tra kinh tế Novus',
+        hint:
+          'Đừng chọn giữa hai cực đoan: để một tập đoàn tự quyết mọi thứ hoặc để cơ quan quản lý thay thế toàn bộ thị trường. Hãy tìm giải pháp sửa các quan hệ đang bị bóp méo.',
+      },
+      theory:
+        'Thị trường có ưu thế trong huy động và phân bổ nguồn lực nhưng cũng có thể phát sinh độc quyền, bất bình đẳng thông tin và xung đột lợi ích. Quản lý phù hợp phải tạo lập thể chế, bảo vệ cạnh tranh và xử lý khuyết tật, thay vì phủ nhận hoặc thay thế hoàn toàn thị trường.',
+    },
+  },
 ] as const satisfies readonly Question[]
 
 export const coinLadder = [
